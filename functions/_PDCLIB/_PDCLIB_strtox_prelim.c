@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <stddef.h>
 #include <string.h>
+#include <vnz/common.h>
 
 #ifndef REGTEST
 
@@ -43,7 +44,7 @@ const char * _PDCLIB_strtox_prelim( const char * p, char * sign, int * base )
                We have to "rewind" the parsing; having the base set to 16 if it
                was zero previously does not hurt, as the result is zero anyway.
             */
-            if ( memchr( _PDCLIB_digits, tolower( *p ), *base ) == NULL )
+            if ( memchr(GET_SYMBOL_ADDR(_PDCLIB_digits), tolower( *p ), *base ) == NULL )
             {
                 p -= 2;
             }

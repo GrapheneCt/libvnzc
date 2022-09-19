@@ -5,6 +5,7 @@
 */
 
 #include <stdio.h>
+#include <uart.h>
 
 #ifndef REGTEST
 
@@ -16,42 +17,17 @@
 
 int puts( const char * s )
 {
-    _PDCLIB_LOCK( stdout->mtx );
-
-    if ( _PDCLIB_prepwrite( stdout ) == EOF )
-    {
-        _PDCLIB_UNLOCK( stdout->mtx );
-        return EOF;
-    }
+	int count = 0;
 
     while ( *s != '\0' )
     {
-        stdout->buffer[ stdout->bufidx++ ] = *s++;
-
-        if ( stdout->bufidx == stdout->bufsize )
-        {
-            if ( _PDCLIB_flushbuffer( stdout ) == EOF )
-            {
-                _PDCLIB_UNLOCK( stdout->mtx );
-                return EOF;
-            }
-        }
+		uart_write(UART_TX_BUS, *s++);
+		count++;
     }
 
-    stdout->buffer[ stdout->bufidx++ ] = '\n';
+	uart_write(UART_TX_BUS, '\n');
 
-    if ( ( stdout->bufidx == stdout->bufsize ) ||
-         ( stdout->status & ( _IOLBF | _IONBF ) ) )
-    {
-        int rc = _PDCLIB_flushbuffer( stdout );
-        _PDCLIB_UNLOCK( stdout->mtx );
-        return rc;
-    }
-    else
-    {
-        _PDCLIB_UNLOCK( stdout->mtx );
-        return 0;
-    }
+	return count;
 }
 
 #endif

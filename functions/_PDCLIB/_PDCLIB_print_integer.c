@@ -8,13 +8,16 @@
 
 #include <inttypes.h>
 #include <stdio.h>
+#include <string.h>
+#include <vnz/common.h>
 
 #include "pdclib/_PDCLIB_print.h"
 
 static void intformat( intmax_t value, struct _PDCLIB_status_t * status )
 {
     /* At worst, we need two prefix characters (hex prefix). */
-    char preface[3] = "\0";
+    char preface[3];
+	memset(preface, 0, sizeof(preface));
     size_t preidx = 0;
 
     if ( status->prec < 0 )
@@ -87,7 +90,7 @@ static void intformat( intmax_t value, struct _PDCLIB_status_t * status )
 
         /* Now we did the padding, do the prefixes (if any). */
         preidx = 0;
-
+		
         while ( preface[ preidx ] != '\0' )
         {
             PUT( preface[ preidx++ ] );
@@ -149,11 +152,11 @@ void _PDCLIB_print_integer( imaxdiv_t div, struct _PDCLIB_status_t * status )
 
         if ( status->flags & E_lower )
         {
-            PUT( _PDCLIB_digits[ div.rem ] );
+            PUT(((char *)GET_SYMBOL_ADDR(_PDCLIB_digits))[ div.rem ] );
         }
         else
         {
-            PUT( _PDCLIB_Xdigits[ div.rem ] );
+            PUT(((char *)GET_SYMBOL_ADDR(_PDCLIB_Xdigits))[ div.rem ] );
         }
     }
 }

@@ -31,9 +31,9 @@ _PDCLIB_intmax_t _PDCLIB_atomax( const char * s )
     }
 
     /* TODO: Earlier version was missing tolower() but was not caught by tests */
-    while ( ( x = (const char *)memchr( _PDCLIB_digits, tolower( *( s++ ) ), 10 ) ) != NULL )
+    while ( ( x = (const char *)memchr(GET_SYMBOL_ADDR(_PDCLIB_digits), tolower( *( s++ ) ), 10 ) ) != NULL )
     {
-        rc = rc * 10 + ( x - _PDCLIB_digits );
+        rc = rc * 10 + ( x - (char *)GET_SYMBOL_ADDR(_PDCLIB_digits));
     }
 
     return ( sign == '+' ) ? rc : -rc;

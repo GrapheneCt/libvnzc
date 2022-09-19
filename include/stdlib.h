@@ -13,6 +13,7 @@ extern "C" {
 
 #include "pdclib/_PDCLIB_lib_ext1.h"
 #include "pdclib/_PDCLIB_internal.h"
+#include <vnz/common.h>
 
 #ifndef _PDCLIB_SIZE_T_DEFINED
 #define _PDCLIB_SIZE_T_DEFINED _PDCLIB_SIZE_T_DEFINED
@@ -227,7 +228,7 @@ _PDCLIB_PUBLIC void qsort( void * base, size_t nmemb, size_t size, int ( *compar
    complement's notation (most modern CPUs), the largest negative value cannot
    be represented as positive value. In this case, behaviour is unspecified.
 */
-_PDCLIB_PUBLIC int abs( int j );
+_PDCLIB_PUBLIC int abs(int j);
 _PDCLIB_PUBLIC long int labs( long int j );
 _PDCLIB_PUBLIC long long int llabs( long long int j );
 
@@ -307,7 +308,7 @@ _PDCLIB_PUBLIC void ignore_handler_s( const char * _PDCLIB_restrict msg, void * 
 /* Search an environment-provided key-value map for the given key name.
    If the name is found,
    - if len is not NULL, the length of the associated value string is stored
-     in that location.
+	 in that location.
    - if len < maxsize, the value string is copied to the indicated location.
    If the name is not found,
    - if len is not NULL, a zero is stored in that location.

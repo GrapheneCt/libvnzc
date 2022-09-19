@@ -8,19 +8,9 @@
 
 #ifndef REGTEST
 
-extern struct _PDCLIB_file_t * _PDCLIB_filelist;
-
 void _PDCLIB_closeall( void )
 {
-    struct _PDCLIB_file_t * stream = _PDCLIB_filelist;
-    struct _PDCLIB_file_t * next;
-
-    while ( stream != NULL )
-    {
-        next = stream->next;
-        fclose( stream );
-        stream = next;
-    }
+    
 }
 
 #endif

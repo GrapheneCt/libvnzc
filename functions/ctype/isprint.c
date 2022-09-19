@@ -5,6 +5,7 @@
 */
 
 #include <ctype.h>
+#include <vnz/common.h>
 
 #ifndef REGTEST
 
@@ -13,7 +14,8 @@
 int isprint( int c )
 {
     /* FIXME: Space as of current locale charset, not source charset. */
-    return ( _PDCLIB_lc_ctype->entry[c].flags & _PDCLIB_CTYPE_GRAPH ) || ( c == ' ' );
+	_PDCLIB_lc_ctype_entry_t *entry = (_PDCLIB_lc_ctype_entry_t *)(GET_SYMBOL_ADDR(_ctype_entries_C) + sizeof(_PDCLIB_lc_ctype_entry_t));
+    return ( entry[c].flags & _PDCLIB_CTYPE_GRAPH ) || ( c == ' ' );
 }
 
 #endif

@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdint.h>
+#include <vnz/common.h>
 
 #ifndef REGTEST
 
@@ -17,9 +18,9 @@ _PDCLIB_uintmax_t _PDCLIB_strtox_main( const char ** p, unsigned int base, uintm
     int digit = -1;
     const char * x;
 
-    while ( ( x = (const char *)memchr( _PDCLIB_digits, tolower( **p ), base ) ) != NULL )
+    while ( ( x = (const char *)memchr(GET_SYMBOL_ADDR(_PDCLIB_digits), tolower( **p ), base ) ) != NULL )
     {
-        digit = x - _PDCLIB_digits;
+        digit = x - (char *)GET_SYMBOL_ADDR(_PDCLIB_digits);
 
         if ( ( rc < limval ) || ( ( rc == limval ) && ( digit <= limdigit ) ) )
         {
@@ -28,11 +29,12 @@ _PDCLIB_uintmax_t _PDCLIB_strtox_main( const char ** p, unsigned int base, uintm
         }
         else
         {
+
             errno = ERANGE;
 
             /* TODO: Only if endptr != NULL - but do we really want *another* parameter? */
             /* TODO: Earlier version was missing tolower() here but was not caught by tests */
-            while ( memchr( _PDCLIB_digits, tolower( **p ), base ) != NULL )
+            while ( memchr(GET_SYMBOL_ADDR(_PDCLIB_digits), tolower( **p ), base ) != NULL )
             {
                 ++( *p );
             }

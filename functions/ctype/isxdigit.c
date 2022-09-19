@@ -5,6 +5,7 @@
 */
 
 #include <ctype.h>
+#include <vnz/common.h>
 
 #ifndef REGTEST
 
@@ -12,9 +13,10 @@
 
 int isxdigit( int c )
 {
+	_PDCLIB_lc_ctype_t *ctype_struct = (_PDCLIB_lc_ctype_t *)(GET_SYMBOL_ADDR(_PDCLIB_lc_ctype_C));
     return ( isdigit( c ) ||
-             ( c >= _PDCLIB_lc_ctype->Xdigits_low && c <= _PDCLIB_lc_ctype->Xdigits_high ) ||
-             ( c >= _PDCLIB_lc_ctype->xdigits_low && c <= _PDCLIB_lc_ctype->xdigits_high )
+             ( c >= ctype_struct->Xdigits_low && c <= ctype_struct->Xdigits_high ) ||
+             ( c >= ctype_struct->xdigits_low && c <= ctype_struct->xdigits_high )
            );
 }
 

@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vnz/common.h>
 
 #include "pdclib/_PDCLIB_print.h"
 
@@ -36,7 +37,7 @@ static void _PDCLIB_print_hexa( int sign,
 
     size_t i;
 
-    char const * digit_chars = ( status->flags & E_lower ) ? _PDCLIB_digits : _PDCLIB_Xdigits;
+    char const * digit_chars = ( status->flags & E_lower ) ? GET_SYMBOL_ADDR(_PDCLIB_digits) : GET_SYMBOL_ADDR(_PDCLIB_Xdigits);
 
     _PDCLIB_static_assert( _PDCLIB_FLT_RADIX == 2, "Assuming 2-based FP" );
     _PDCLIB_static_assert( _PDCLIB_CHAR_BIT == 8, "Assuming 8-bit bytes" );

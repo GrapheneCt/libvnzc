@@ -5,12 +5,13 @@
 */
 
 #include <stdlib.h>
+#include <vnz/common.h>
 
 #ifndef REGTEST
 
 void srand( unsigned int seed )
 {
-    _PDCLIB_seed = seed;
+	*(unsigned long int *)GET_SYMBOL_ADDR(_PDCLIB_seed) = seed;
 }
 
 #endif

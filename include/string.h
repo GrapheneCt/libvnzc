@@ -13,6 +13,7 @@ extern "C" {
 
 #include "pdclib/_PDCLIB_lib_ext1.h"
 #include "pdclib/_PDCLIB_internal.h"
+#include <vnz/common.h>
 
 #ifndef _PDCLIB_SIZE_T_DEFINED
 #define _PDCLIB_SIZE_T_DEFINED _PDCLIB_SIZE_T_DEFINED
@@ -38,7 +39,7 @@ typedef _PDCLIB_size_t size_t;
    area pointed to by s1. If the two areas overlap, behaviour is undefined.
    Returns the value of s1.
 */
-_PDCLIB_PUBLIC void * memcpy( void * _PDCLIB_restrict s1, const void * _PDCLIB_restrict s2, size_t n );
+_PDCLIB_PUBLIC void * memcpy(void * _PDCLIB_restrict s1, const void * _PDCLIB_restrict s2, size_t n);
 
 /* Copy a number of n characters from the memory area pointed to by s2 to the
    area pointed to by s1. The two areas may overlap.
@@ -175,7 +176,7 @@ _PDCLIB_PUBLIC char * strtok( char * _PDCLIB_restrict s1, const char * _PDCLIB_r
    characters of the memory area pointed to by s.
    Returns s.
 */
-_PDCLIB_PUBLIC void * memset( void * s, int c, size_t n );
+_PDCLIB_PUBLIC void * memset(void * s, int c, size_t n);
 
 /* Map an error number to a (locale-specific) error message string. Error
    numbers are typically errno values, but any number is mapped to a message.

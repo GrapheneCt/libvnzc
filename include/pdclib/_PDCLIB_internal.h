@@ -549,14 +549,14 @@ extern struct _PDCLIB_lc_collate_t _PDCLIB_lc_collate_C;
 extern struct _PDCLIB_lc_collate_t * _PDCLIB_lc_collate;
 
 /* One entry to the _PDCLIB_lc_ctype_t.entry data table */
-struct _PDCLIB_lc_ctype_entry_t
+typedef struct _PDCLIB_lc_ctype_entry_t
 {
     _PDCLIB_uint_least16_t flags;  /* Whether a character is of a given CTYPE */
     unsigned char upper;           /* Result for toupper() */
     unsigned char lower;           /* Result for tolower() */
-};
+} _PDCLIB_lc_ctype_entry_t;
 
-struct _PDCLIB_lc_ctype_t
+typedef struct _PDCLIB_lc_ctype_t
 {
     int alloced;                             /* .entry dynamically allocated? */
     int digits_low;                          /* Where decimal digits start */
@@ -566,10 +566,11 @@ struct _PDCLIB_lc_ctype_t
     int xdigits_low;                         /* Where a..f start */
     int xdigits_high;                        /* Where a..f end */
     struct _PDCLIB_lc_ctype_entry_t * entry; /* The data table */
-};
+} _PDCLIB_lc_ctype_t;
 
 extern struct _PDCLIB_lc_ctype_t _PDCLIB_lc_ctype_C;
 extern struct _PDCLIB_lc_ctype_t * _PDCLIB_lc_ctype;
+extern struct _PDCLIB_lc_ctype_entry_t _ctype_entries_C[_PDCLIB_CHARSET_SIZE + 1];
 
 struct _PDCLIB_lc_messages_t
 {

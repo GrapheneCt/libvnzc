@@ -8,18 +8,26 @@
 
 #ifndef REGTEST
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-type"
 void * memcpy( void * _PDCLIB_restrict s1, const void * _PDCLIB_restrict s2, size_t n )
 {
-    char * dest = ( char * ) s1;
-    const char * src = ( const char * ) s2;
-
-    while ( n-- )
-    {
-        *dest++ = *src++;
-    }
-
-    return s1;
+	__asm volatile (
+		"mov			$0,$1					\n\t"
+		"add3			$12,$3,-1				\n\t"
+		"beqz			$3,END_%=				\n\t"
+		"repeat			$12,REPEND_%=			\n\t"
+		"lb				$12,($2)				\n\t"
+		"add			$2,1					\n\t"
+		"REPEND_%=:								\n\t"
+		"sb				$12,($1)				\n\t"
+		"add			$1,1					\n\t"
+		"END_%=:								\n\t"
+		"ret									\n\t"
+		:::
+	);
 }
+#pragma GCC diagnostic pop
 
 #endif
 

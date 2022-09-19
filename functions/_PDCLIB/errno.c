@@ -7,16 +7,13 @@
 #ifndef REGTEST
 
 #include "pdclib/_PDCLIB_internal.h"
+#include <vnz/common.h>
 
-#if __STDC_VERSION__ >= 201112L
-_Thread_local int _PDCLIB_errno = 0;
-#else
 static int _PDCLIB_errno = 0;
-#endif
 
 int * _PDCLIB_errno_func()
 {
-    return &_PDCLIB_errno;
+	return (int *)GET_SYMBOL_ADDR(_PDCLIB_errno);
 }
 
 #endif

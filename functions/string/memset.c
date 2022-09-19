@@ -8,17 +8,25 @@
 
 #ifndef REGTEST
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-type"
 void * memset( void * s, int c, size_t n )
 {
-    unsigned char * p = ( unsigned char * ) s;
-
-    while ( n-- )
-    {
-        *p++ = ( unsigned char ) c;
-    }
-
-    return s;
+	__asm volatile (
+		"mov			$0,$1					\n\t"
+		"add3			$12,$3,-1				\n\t"
+		"beqz			$3,END_%=				\n\t"
+		"repeat			$12,REPEND_%=			\n\t"
+		"nop									\n\t"
+		"REPEND_%=:								\n\t"
+		"sb				$2,($1)					\n\t"
+		"add			$1,1					\n\t"
+		"END_%=:								\n\t"
+		"ret									\n\t"
+		:::
+		);
 }
+#pragma GCC diagnostic pop
 
 #endif
 

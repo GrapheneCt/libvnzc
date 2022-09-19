@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <uart.h>
 
 #ifndef REGTEST
 
@@ -18,48 +19,31 @@
 
 int vfprintf( struct _PDCLIB_file_t * _PDCLIB_restrict stream, const char * _PDCLIB_restrict format, va_list arg )
 {
+	if (stream != stderr && stream != stdout)
+		return EOF;
+
     /* TODO: This function should interpret format as multibyte characters.  */
-    struct _PDCLIB_status_t status;
-    status.base = 0;
-    status.flags = 0;
-    status.n = SIZE_MAX;
-    status.i = 0;
-    status.current = 0;
-    status.s = NULL;
-    status.width = 0;
-    status.prec = EOF;
-    status.stream = stream;
-
-    _PDCLIB_LOCK( stream->mtx );
-
-    if ( _PDCLIB_prepwrite( stream ) == EOF )
-    {
-        _PDCLIB_UNLOCK( stream->mtx );
-        return EOF;
-    }
+	struct _PDCLIB_status_t status;
+	status.base = 0;
+	status.flags = 0;
+	status.n = SIZE_MAX;
+	status.i = 0;
+	status.current = 0;
+	status.s = NULL;
+	status.width = 0;
+	status.prec = EOF;
+	status.stream = stream;
 
     va_copy( status.arg, arg );
 
     while ( *format != '\0' )
     {
-        const char * rc;
+        const char * rc = format + 1;
 
         if ( ( *format != '%' ) || ( ( rc = _PDCLIB_print( format, &status ) ) == format ) )
         {
             /* No conversion specifier, print verbatim */
-            stream->buffer[ stream->bufidx++ ] = *format;
-
-            if ( ( stream->bufidx == stream->bufsize )
-                 || ( ( stream->status & _IOLBF ) && ( *format == '\n' ) )
-                 || ( stream->status & _IONBF )
-               )
-            {
-                if ( _PDCLIB_flushbuffer( stream ) != 0 )
-                {
-                    _PDCLIB_UNLOCK( stream->mtx );
-                    return EOF;
-                }
-            }
+			uart_write(UART_TX_BUS, *format);
 
             ++format;
             status.i++;
@@ -72,7 +56,7 @@ int vfprintf( struct _PDCLIB_file_t * _PDCLIB_restrict stream, const char * _PDC
     }
 
     va_end( status.arg );
-    _PDCLIB_UNLOCK( stream->mtx );
+
     return status.i;
 }
 

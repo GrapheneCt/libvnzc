@@ -13,7 +13,7 @@
 
 void abort_handler_s( const char * _PDCLIB_restrict msg, void * _PDCLIB_restrict ptr, errno_t errno )
 {
-    fprintf( stderr, "abort handler called:\n%s\n", msg );
+    fprintf( stderr, GET_SYMBOL_ADDR("abort handler called:\n%s\n"), msg );
     abort();
 }
 

@@ -9,6 +9,8 @@
 */
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <vnz/common.h>
 
 #ifndef REGTEST
 
@@ -18,15 +20,16 @@
 extern "C" {
 #endif
 
-extern _PDCLIB_Noreturn void _exit( int status ) _PDCLIB_NORETURN;
-
 #ifdef __cplusplus
 }
 #endif
 
 void _PDCLIB_Exit( int status )
 {
-    _exit( status );
+	if (status == EXIT_FAILURE)
+		puts(GET_SYMBOL_ADDR("\n\n!!!_PDCLIB_Exit: EXIT_FAILURE!!!\n\n"));
+
+	while (1) {};
 }
 
 #endif
@@ -38,11 +41,11 @@ void _PDCLIB_Exit( int status )
 int main( void )
 {
 #ifndef REGTEST
-    int UNEXPECTED_RETURN = 0;
-    _PDCLIB_Exit( 0 );
-    TESTCASE( UNEXPECTED_RETURN );
+	int UNEXPECTED_RETURN = 0;
+	_PDCLIB_Exit( 0 );
+	TESTCASE( UNEXPECTED_RETURN );
 #endif
-    return TEST_RESULTS;
+	return TEST_RESULTS;
 }
 
 #endif

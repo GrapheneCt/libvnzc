@@ -554,9 +554,9 @@ typedef char * _PDCLIB_va_list;
 #define _PDCLIB_va_end( ap ) ( (ap) = (void *)0, (void)0 )
 #define _PDCLIB_va_start( ap, parmN ) ( (ap) = (char *) &parmN + ( _PDCLIB_va_round(parmN) ), (void)0 )
 
-#elif defined( __x86_64 ) || defined( __arm__ ) || defined( __ARM_NEON )
+#elif defined( __x86_64 ) || defined( __arm__ ) || defined( __ARM_NEON ) || defined(__MEP__)
 
-/* No way to cover x86_64 or arm with a generic implementation, as it uses    */
+/* No way to cover x86_64 or arm or MeP with a generic implementation, as it uses    */
 /* register-based parameter passing. Using compiler builtins here.            */
 typedef __builtin_va_list _PDCLIB_va_list;
 #define _PDCLIB_va_arg( ap, type ) ( __builtin_va_arg( ap, type ) )

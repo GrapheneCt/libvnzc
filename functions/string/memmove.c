@@ -8,31 +8,41 @@
 
 #ifndef REGTEST
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-type"
 void * memmove( void * s1, const void * s2, size_t n )
 {
-    char * dest = ( char * ) s1;
-    const char * src = ( const char * ) s2;
-
-    if ( dest <= src )
-    {
-        while ( n-- )
-        {
-            *dest++ = *src++;
-        }
-    }
-    else
-    {
-        src += n;
-        dest += n;
-
-        while ( n-- )
-        {
-            *--dest = *--src;
-        }
-    }
-
-    return s1;
+	__asm volatile (
+		"beqz			$3,LOC1_%=		\n\t"
+		"sltu3			$0,$1,$2		\n\t"
+		"beqz			$0,LOC2_%=		\n\t"
+		"mov			$12,$1			\n\t"
+		"erepeat		REPEND1_%=		\n\t"
+		"lb				$11,($2)		\n\t"
+		"add			$2,1			\n\t"
+		"add			$3,-1			\n\t"
+		"sb				$11,($12)		\n\t"
+		"REPEND1_%=:					\n\t"
+		"add			$12,1			\n\t"
+		"beqz			$3,LOC1_%=		\n\t"
+		"LOC2_%=:						\n\t"
+		"add3			$12,$1,$3		\n\t"
+		"add3			$11,$2,$3		\n\t"
+		"erepeat		REPEND2_%=		\n\t"
+		"add			$3,-1			\n\t"
+		"add			$11,-1			\n\t"
+		"lb				$10,($11)		\n\t"
+		"add			$12,-1			\n\t"
+		"REPEND2_%=:					\n\t"
+		"sb				$10,($12)		\n\t"
+		"beqz			$3,LOC1_%=		\n\t"
+		"LOC1_%=:						\n\t"
+		"mov			$0,$1			\n\t"
+		"ret							\n\t"
+		:::
+	);
 }
+#pragma GCC diagnostic pop
 
 #endif
 

@@ -5,6 +5,7 @@
 */
 
 #include <ctype.h>
+#include <vnz/common.h>
 
 #ifndef REGTEST
 
@@ -12,7 +13,8 @@
 
 int tolower( int c )
 {
-    return _PDCLIB_lc_ctype->entry[c].lower;
+	_PDCLIB_lc_ctype_entry_t *entry = (_PDCLIB_lc_ctype_entry_t *)(GET_SYMBOL_ADDR(_ctype_entries_C) + sizeof(_PDCLIB_lc_ctype_entry_t));
+    return entry[c].lower;
 }
 
 #endif

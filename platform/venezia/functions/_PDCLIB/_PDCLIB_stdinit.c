@@ -17,50 +17,11 @@
 
 #include "pdclib/_PDCLIB_tzcode.h"
 
-/* In a POSIX system, stdin / stdout / stderr are equivalent to the (int) file
-   descriptors 0, 1, and 2 respectively.
-*/
-/* TODO: This is proof-of-concept, requires finetuning. */
-static char _PDCLIB_sin_buffer[BUFSIZ];
-static char _PDCLIB_sout_buffer[BUFSIZ];
-static char _PDCLIB_serr_buffer[BUFSIZ];
-
-static struct _PDCLIB_file_t _PDCLIB_serr = { 2, _PDCLIB_serr_buffer, BUFSIZ, 0, 0, { 0, 0 }, 0, { 0 }, _IONBF | _PDCLIB_FWRITE,
-#ifndef __STDC_NO_THREADS__
-    _PDCLIB_MTX_RECURSIVE_INIT,
-#endif
-    NULL, NULL
-};
-static struct _PDCLIB_file_t _PDCLIB_sout = { 1, _PDCLIB_sout_buffer, BUFSIZ, 0, 0, { 0, 0 }, 0, { 0 }, _IOLBF | _PDCLIB_FWRITE,
-#ifndef __STDC_NO_THREADS__
-    _PDCLIB_MTX_RECURSIVE_INIT,
-#endif
-    NULL, &_PDCLIB_serr
-};
-static struct _PDCLIB_file_t _PDCLIB_sin  = { 0, _PDCLIB_sin_buffer, BUFSIZ, 0, 0, { 0, 0 }, 0, { 0 }, _IOLBF | _PDCLIB_FREAD,
-#ifndef __STDC_NO_THREADS__
-    _PDCLIB_MTX_RECURSIVE_INIT,
-#endif
-    NULL, &_PDCLIB_sout
-};
-
-struct _PDCLIB_file_t * stdin  = &_PDCLIB_sin;
-struct _PDCLIB_file_t * stdout = &_PDCLIB_sout;
-struct _PDCLIB_file_t * stderr = &_PDCLIB_serr;
-
-/* FIXME: This approach is a possible attack vector. */
-struct _PDCLIB_file_t * _PDCLIB_filelist = &_PDCLIB_sin;
-
-#ifndef __STDC_NO_THREADS__
-_PDCLIB_mtx_t _PDCLIB_filelist_mtx = _PDCLIB_MTX_PLAIN_INIT;
-_PDCLIB_mtx_t _PDCLIB_time_mtx = _PDCLIB_MTX_PLAIN_INIT;
-#endif
-
 /* "C" locale - defaulting to ASCII-7.
    1 kByte (+ 4 byte) of <ctype.h> data.
    Each line: flags, lowercase, uppercase.
 */
-static struct _PDCLIB_lc_ctype_entry_t _ctype_entries_C[ _PDCLIB_CHARSET_SIZE + 1 ] =
+struct _PDCLIB_lc_ctype_entry_t _ctype_entries_C[ _PDCLIB_CHARSET_SIZE + 1 ] =
 {
     { /* EOF */    0,    0,    0 },
     { /* NUL */ _PDCLIB_CTYPE_CNTRL,                                             0x00, 0x00 },
