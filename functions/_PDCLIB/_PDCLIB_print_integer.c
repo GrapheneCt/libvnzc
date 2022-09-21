@@ -13,7 +13,8 @@
 
 #include "pdclib/_PDCLIB_print.h"
 
-static void intformat( intmax_t value, struct _PDCLIB_status_t * status )
+// Compiler attempts to inline this function which results in broken code on MeP somehow
+static __attribute__((noinline)) void intformat( intmax_t value, struct _PDCLIB_status_t * status )
 {
     /* At worst, we need two prefix characters (hex prefix). */
     char preface[3];

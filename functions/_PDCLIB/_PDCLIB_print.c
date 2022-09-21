@@ -174,34 +174,35 @@ const char * _PDCLIB_print( const char * spec, struct _PDCLIB_status_t * status 
 	}
 
 	/* Conversion specifier */
-	switch (*spec)
-	{
-	case 'x':
+	char ch = *spec;
+	if (ch == 'x') {
 		status->base = 16;
 		status->flags |= (E_lower | E_unsigned);
-		break;
-
-	case 'X':
+	}
+	else if (ch == 'X') {
 		status->base = 16;
 		status->flags |= E_unsigned;
-		break;
-
-	case 'c':
-		/* TODO: wide chars. */
-	{
+	}
+	else if (ch == 'd' || ch == 'i') {
+		status->base = 10;
+	}
+	else if (ch == 'u') {
+		status->base = 10;
+		status->flags |= E_unsigned;
+	}
+	else if (ch == 'c') {
 		char c[1];
 		c[0] = (char)va_arg(status->arg, int);
 		status->flags |= E_char;
 		_PDCLIB_print_string(c, status);
 		return ++spec;
 	}
-
-	case 's':
+	else if (ch == 's') {
 		/* TODO: wide chars. */
 		_PDCLIB_print_string(va_arg(status->arg, char *), status);
 		return ++spec;
-
-	default:
+	}
+	else {
 		/* No conversion specifier. Bad conversion. */
 		return orig_spec;
 	}
